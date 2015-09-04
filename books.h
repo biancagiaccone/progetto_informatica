@@ -15,6 +15,7 @@
 
 enum role {parent, student, teacher};
 enum genre {classic, avdenture, historic, thriller, fantasy};
+//da aggiungere tipologie
 
 
 //classi
@@ -34,9 +35,10 @@ template<typename CODE> class book
     friend std::istream &operator>><CODE> (std::istream &is, book<CODE> &b);
     
 public:
-    typedef CODE book_code_type;
+    typedef CODE value_type;
     //creator
-    book(CODE& book_code, std::string title, std::string author, genre b_genre): m_book_code(book_code), m_title(title), m_author(author), m_genre(b_genre) {}
+    book(CODE& book_code, std::string title, std::string author, genre b_genre, double cost, int quantity, int available_quantity): m_book_code(book_code), m_title(title), m_author(author), m_genre(b_genre), m_cost(cost), m_quantity(quantity), m_a_quantity(available_quantity) {}
+    book() {}
     //denstructor
     ~book(){}
     
@@ -56,14 +58,17 @@ private:
     std::string m_book_code;
     std::string reader_age;
     genre m_genre;
+    double m_cost;
+    int m_quantity;
+    int m_a_quantity;
     //manca descrizione: che tipo posso usare?!
 };
 
-
+//da ripensare is e os per SQLite
 template<typename CODE>
 std::ostream &operator<< (std::ostream &os, const book<CODE> b)
 {
-    return os << b.m_book_code << ": " << b.m_author << ", " << b.m_title
+    return os << b.m_book_code << ": " << b.m_author << " - " << b.m_title
     << " - " << b.m_genre << ", età consigliata " << b.reader_age << " anni. ";
     //capire come è scritto reader_age
 }
@@ -71,7 +76,6 @@ std::ostream &operator<< (std::ostream &os, const book<CODE> b)
 template<typename CODE>
 std::istream &operator>> (std::istream &is, book<CODE> &b)
 {
-    
     bool input_done = false;
     
     while(!input_done)
@@ -86,29 +90,32 @@ std::istream &operator>> (std::istream &is, book<CODE> &b)
         {
             is.clear(); // We may be at EOF after reading a valid record.
             
-            std::string::size_type pos_n1 = line.find_first_of('/n');
-            std::string::size_type pos_n2 = line.find_last_of('/n');
-            std::string::size_type pos_n3 = line.find_last_of('/n');
-            std::string::size_type pos_n4 = line.find_last_of('/n');
-            std::string::size_type pos_n5 = line.find_last_of('/n');
-
-            //ho messo tutti /n ma potrebbe essere il caso di cambiare
+            std::size_t pos_a = line.find_first_of(':');
+            std::size_t pos_b = line.find_first_of('-');
+            if (pos_a == std::string::npos || pos_b == std::string::npos)
+                continue; // Skip malformed lines
+            b.m_author = line.substr(pos_a+2, (pos_b-pos_a-3));
             
-            if (pos_n1 == std::string::npos || pos_n2 == std::string::npos)
-                continue; // Skip malformed lines ??
+            pos_a = line.find_first_of('-');
+            if (pos_a == std::string::npos)
+                continue; // Skip malformed lines
+            b.m_title = line.substr(pos_b+2, (pos_a-pos_b-3));
             
-            b.m_book_code = line.substr(0,pos_n1-1);
-            b.m_author = line.substr(pos_n1+2, (pos_n2-pos_n1-3));
-            b.m_title = line.substr(pos_n2+2, (pos_n3-pos_n2-3));
-            b.m_genre = line.substr(pos_n3+2, (pos_n4-pos_n3-3));//controllare come viene acquisito, perchè è un tipo enum
-            b.reader_age = line.substr(pos_n4+2, (pos_n5-pos_n4-3));
+            pos_b = line.find_first_of(',', pos_a+1);
+            if (pos_b == std::string::npos)
+                continue; // Skip malformed lines
+            std::istringstream genrestr(line.substr(pos_a+2, (pos_b-pos_a-3)));
+            genrestr >> b.m_genre;
+            //b.m_genre = line.substr(pos_a+2, (pos_b-pos_a-3));
+            //controllare come viene acquisito, perchè è un tipo enum
+            pos_a=line.find_last_of('a');
+            b.reader_age = line.substr(pos_b+18, (pos_a-pos_b+18));
             
-            //controllare le acquisizioni, se avvengono giuste
-            
-            
-            std::istringstream codestr(line.substr(0,pos_n1-1));
+            std::istringstream codestr(line.substr(0,pos_a-1));
             codestr >> b.m_book_code;
             input_done = true;
+        
+            //controllare le acquisizioni, se avvengono giuste!
         }
         
         // cosa fa qui?
@@ -125,91 +132,6 @@ std::istream &operator>> (std::istream &is, book<CODE> &b)
     
     return is;
 }
-
-
-
-
-//utente base
-class user_0
-{
-public:
-    //constructor
-    user_0(std::string username, std::string pwd): m_username(username), m_pwd(pwd)
-    {}
-    //destructors
-    ~user_0()
-    {}
-    void login();
-    void show_list();
-    void find();
-    void show_book();
-    void get_info();
-    
-private:
-    //
-    std::string m_username;
-    std::string m_pwd;
-    int m_n_books;
-    //info personali
-    std::string name;
-    std::string birth_date;
-    std::string kind;
-    role m_role;
-    
-};
-
-class user_1: public user_0
-{
-    
-public:
-    user_1(std::string username, std::string pwd): m_n_books(0) //devo riinizializzare tutto?? che errore è?!
-    
-    {}
-    ~user_1()
-    {}
-    
-    const static int max_no_books=3;
-    void borrow_book();
-    void reserve_book();
-    //void show_statistics(); //panic
-    void return_book();
-private:
-    int m_n_books;
-    
-};
-
-class user_admin: public user_1
-{
-public:
-    user_admin()
-    {};
-    ~user_admin()
-    {}
-    
-    void add_book();
-    
-    void show_user_history(); //? mi sembra troppo complessa, ci vorrebbero molte sottofunzioni
-    void show_reservations();
-    void show_lendings();
-    void show_returned();
-    //void show_tot_statistics();
-};
-
-
-void user_0::login()
-{
-    
-}
-
-void user_0::show_list()
-{
-    
-}
-
-void find();
-void show_book();
-void get_info();
-
 
 
 
