@@ -9,7 +9,7 @@
 
 
 //iniziamo con il server
-//decidiamo una porta da usare: 5001
+//decidiamo una porta da usare: 5002
 
 const int portno = 5002;
 
