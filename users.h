@@ -10,21 +10,25 @@
 #define esame_prelz_users_h
 
 
+//enum role {parent, student, teacher};//is that useful?
+
 //utente base
 class user_0
 {
 public:
     //constructor
-    user_0(std::string username, std::string pwd): m_username(username), m_pwd(pwd)
-    {}
+    user_0(std::string username, std::string pwd): m_username(username), m_pwd(pwd) {}
+    user_0() {}
     //destructors
-    ~ user_0()
-    {}
-    void login();
-    void show_list();
+    ~ user_0() {}
+    
+    const std::string &get_username() const { return m_username; }
+    const std::string &get_pwd() const { return m_pwd; }
+    
+    bool login(std::string u, std::string p);
+    void show_list(std::vector book &bv);
     void find();
     void show_book();
-    void get_info();
     
 private:
     //
@@ -35,7 +39,7 @@ private:
     std::string name;
     std::string birth_date;
     std::string kind;
-    role m_role;
+    //role m_role;
     
 };
 
@@ -76,10 +80,11 @@ public:
     //void show_tot_statistics();
 };
 
-
-void user_0::login()
+//prima devo ciclare sugli users
+bool user_0::login()
 {
-    
+    if (p==get_pwd) { return true; }
+    else { return false; }
 }
 
 void user_0::show_list()

@@ -21,8 +21,6 @@
 #define esame_prelz_users_h
 
 
-//enum role {parent, student, teacher};//is that useful?
-
 //utente base
 class user_0
 {
@@ -40,9 +38,9 @@ public:
     bool login(std::string u, std::string p);
     bool compare(std::string to_search, std::string to_find);
     void show_list(std::vector book &bv, int num);
-    void find_per_title(std::vector book &bv, int num);
-    void find_per_author(std::vector book &bv, int num);
-    void show_book(std::vector book &bv, int num);
+    void find_per_title(std::vector book &bv, std::vector book &sb, int num);
+    void find_per_author(std::vector book &bv, std::vector book &sb, int num);
+    void show_book(std::vector book &sb, int num);
     
 private:
     //
@@ -52,29 +50,27 @@ private:
     //info personali
     std::string name;
     std::string birth_date;
-    std::string kind;
-    //role m_role;
-    
+    //std::string kind;
 };
 
 class user_1: public user_0()
 {
-    
 public:
-    user_1(std::string username, std::string pwd): m_n_books(0) //devo riinizializzare tutto?? che errore è?!
+    //constructors
+    user_1(std::string username, std::string pwd): m_n_books(0) {}
+    user_1() {}
+    //destructor
+    ~user_1(){}
     
-    {}
-    ~user_1()
-    {}
+    static int max_no_books=3;
+    const int &get_m_n_books() const { return m_n_books; }
     
-    const static int max_no_books=3;
     void borrow_book();
     void reserve_book();
     //void show_statistics(); //panic
     void return_book();
 private:
     int m_n_books;
-    
 };
 
 class user_admin: public user_1
@@ -94,7 +90,7 @@ public:
     //void show_tot_statistics();
 };
 
-//prima devo ciclare sugli users
+
 bool user_0::login()
 {
     if (p==get_pwd) { return true; }
@@ -112,7 +108,7 @@ bool user_0::compare(std::string to_search, std::string to_find)
     else { return false; }
 }
 
-void user_0::find_per_title(std::vector book &bv, int num)
+void user_0::find_per_title(std::vector book &bv, std::vector book &sb, int num)
 {
     int counter=0;
     for(int i=0; i<num; i++)
@@ -142,6 +138,58 @@ void user_0::show_book(std::vector book &sb, int num)
 {
     for (int i=0; i<num; i++) std::cout << sb[i] << std::endl;
 }
+
+void user_1::borrow_book()
+{
+    if (m_n_books<max_no_books) {
+        
+        *****
+        
+        
+    } else {
+        std::cout << "Non puoi prendere altri libri in prestito!" << std::endl;
+    }
+}
+
+void user_1::reserve_book()
+{
+    if (m_n_books<max_no_books) {
+        
+        *****
+        
+        
+    } else {
+        std::cout << "Non puoi prendere altri libri in prestito!" << std::endl;
+    }
+}
+
+void user_1::return_book()
+{
+    if (m_n_books==0)
+    {
+        std::cout << "You don't have any book!" << std::endl;
+    }
+    else
+    {
+        std::cout << "Che libro vuoi restituire?" << std::endl;
+        std::cin >> //titolo libro, autore libro...
+        //aggiungi uno a "quantità disponibile" del libro indicato.
+        m_n_books-=m_n_books;
+    }
+}
+
+void user_admin::add_book()
+{
+    
+    
+}
+
+
+void show_user_history(); //? mi sembra troppo complessa, meglio sviluppare sottofunzioni
+void show_reservations();
+void show_lendings();
+void show_returned();
+
 
 
 #endif

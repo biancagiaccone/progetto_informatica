@@ -1,0 +1,28 @@
+1|
+Paul|
+32|
+California|
+20000.0|
+2|
+Allen|
+25|
+Texas|
+15000.0|
+3|
+Teddy|
+23|
+Norway|
+20000.0|
+4|
+Mark|
+25|
+Rich-Mond |
+65000.0|
+51|5Paul|532|5California|520000.0|
+52|5Allen|525|5Texas|515000.0|
+53|5Teddy|523|5Norway|520000.0|
+54|5Mark|525|5Rich-Mond |565000.0|
+51|Paul|32|California|20000.0|
+52|Allen|25|Texas|15000.0|
+53|Teddy|23|Norway|20000.0|
+54|Mark|25|Rich-Mond |65000.0|

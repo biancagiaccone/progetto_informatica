@@ -19,6 +19,7 @@
 #include "books.h"
 #include <sqlite3.h>
 #include "f_database.h"
+#include <regex>
 
 //volevo che le funsioni per il db stessero in un .h a parte, ma se le tolgo da qui non le legge più....perchè?? :(
 static int callback(void *NotUsed, int argc, char **argv, char **azColName){
@@ -46,6 +47,7 @@ int main(int argc, char * argv[]) {
     char *zErrMsg = 0;
     int rc;
     char *sql;
+
     
     //apro db
     rc = sqlite3_open("test.db", &db);
@@ -100,6 +102,8 @@ int main(int argc, char * argv[]) {
         sql = "INSERT INTO BOOKS (ID,AUTHOR,TITLE,EDITION,PRICE,QUANTITY,AVAILABLE_QUANTITY) "  \
         "VALUES (b.book_code, b.get_author, b.get_title, b.get_edition, b.get_cost, b. get_quantity, b.get_a_quantity ); " ;
     
+        
+        
         // Execute SQL statement
         rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
     
@@ -116,10 +120,17 @@ int main(int argc, char * argv[]) {
         i++;
     }
     
+    /* Create SQL statement */
+    sql = "SELECT * from COMPANY";
     
-    
-    
-    
+    /* Execute SQL statement */
+    rc = sqlite3_exec(db, sql, callback, &zErrMsg);
+    if( rc != SQLITE_OK ){
+        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    }else{
+        fprintf(stdout, "Operation done successfully\n");
+    }
     
     
     
