@@ -1,0 +1,1 @@
+resources/tiny_mce/js/tinymce/tinymce.min.js
