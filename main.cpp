@@ -139,10 +139,6 @@ int main(int argc, char * argv[]) {
     std::cout << "Successfully read " << books.size() << " elements."
     << std::endl;
     
-    
-    
-    
-    
 
     sqlite3_close(db);
 
